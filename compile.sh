@@ -36,7 +36,7 @@ fi
 name=$(basename "$CR_PATH")
 name=${name%.*}
 # Create output folder
-output=$(mkdir "$outdir")
+output=$(mkdir "$outdir" 2>&1)
 # Compile with rubber
 output="$output $(rubber -s --into $outdir --pdf "$CR_PATH" 2>&1)"
 status=$?
