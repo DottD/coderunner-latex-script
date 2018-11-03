@@ -40,14 +40,21 @@ if [ $? -ne 0 ]; then # exit on error
 	>& 2 echo "$name"
 	exit 1
 fi
-logfile="$PWD/$outdir/${name}_log.txt"
+# Create a log file
+logfile="$PWD/$outdir/${name}_overall.log"
 # Compile with pdflatex
-message=$(latexmk -outdir=$outdir -pdf -cd -time -silent "$CR_PATH" &>$logfile)
-if [ $? -ne 0 ]; then # halt on error
+# Send stderr to $message and stdout to log file
+message=$(latexmk -outdir=$outdir -pdf -cd -time "$CR_PATH" 2>1)
+status=$?
+# Outputs message to log file
+echo "$message" > "$logfile"
+# Print messages to console or show the generated PDF
+if [ $status -ne 0 ]; then # halt on error
 	# Send compilation log to stderr
-	>& 2 echo "$message"
+	echo "$message" >& 2
 	exit 1
+else
+	# Send PDF file path to console
+	echo "$PWD/$outdir/$name.pdf" >& 1
+	exit 0
 fi
-# Send PDF file path to console
-echo "$PWD/$outdir/$name.pdf"
-exit 0
