@@ -44,17 +44,17 @@ fi
 logfile="$PWD/$outdir/${name}_overall.log"
 # Compile with pdflatex
 # Send stderr to $message and stdout to log file
-message=$(latexmk -outdir=$outdir -pdf -cd -time "$CR_PATH" 2>1)
+message=$(latexmk -outdir=$outdir -pdf -cd -time "$CR_PATH" 2>&1)
 status=$?
 # Outputs message to log file
 echo "$message" > "$logfile"
 # Print messages to console or show the generated PDF
 if [ $status -ne 0 ]; then # halt on error
 	# Send compilation log to stderr
-	echo "$message" >& 2
+	echo "$message" >&2
 	exit 1
 else
 	# Send PDF file path to console
-	echo "$PWD/$outdir/$name.pdf" >& 1
+	echo "$PWD/$outdir/$name.pdf" >&1
 	exit 0
 fi
